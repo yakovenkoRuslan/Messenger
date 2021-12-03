@@ -8,10 +8,13 @@
   <artifactId>Chess</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <name>OnlineChess</name>
+  <description>Online Chess with Spring boot</description>
+
   <properties>
     <spring.boot.version>2.4.3</spring.boot.version>
-    <spring.boot.security.version>2.4.5</spring.boot.security.version>
-    <lombok.version>1.18.20</lombok.version>
+    <spring.boot.security.version>2.6.0</spring.boot.security.version>
+    <lombok.version>1.18.22</lombok.version>
     <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     <jjwt.version>0.9.1</jjwt.version>
   </properties>
@@ -23,6 +26,7 @@
   </parent>
 
   <dependencies>
+    <!--Spring-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -37,6 +41,46 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>${spring.boot.security.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!--postgresql-->
+<!--    <dependency>-->
+<!--      <groupId>org.postgresql</groupId>-->
+<!--      <artifactId>postgresql</artifactId>-->
+<!--      <version>42.3.1</version>-->
+<!--    </dependency>-->
+
+    <!--jjwt-->
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+
+
+    <!-- lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>

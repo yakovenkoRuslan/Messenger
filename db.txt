@@ -1,0 +1,30 @@
+table user as u {
+  id int [pk]
+  username varchar
+  password varchar
+  email varchar
+  friend int
+  games int
+  raiting int
+}
+
+table game {
+  game_id int [pk]
+  first_player varchar
+  second_player varchar
+  win_color varchar
+  winner int
+  type_of_game int
+  moves varchar
+}
+
+table typeOfGame {
+  id int [pk]
+  name varchar
+}
+
+Ref : u.games > game.game_id
+Ref: u.friend > u.id
+Ref: game.type_of_game > typeOfGame.id
+Ref: game.first_player - user.username
+Ref: game.second_player - user.username
