@@ -1,4 +1,4 @@
-package com.chess.service;
+package com.chess.service.implementations;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
