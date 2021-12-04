@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface UserService {
 
-    UserEntity findUserById();
+    UserEntity findUserById(Long id);
 
-    UserEntity findUserByUsername();
+    UserEntity findUserByUsername(String username);
 
     List<UserEntity> findAllUsers();
 
