@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class MessageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Long;
+    private Long id;
 
     @Column(name = "sender")
     @ManyToOne

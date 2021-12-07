@@ -3,11 +3,13 @@ package com.chess.service.implementations;
 import com.chess.dao.entity.UserEntity;
 import com.chess.dao.repository.UserRepository;
 import com.chess.service.interfaces.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     final UserRepository userRepository;
@@ -34,6 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserEntity userEntity) {
         userRepository.save(userEntity);
+        log.info("User with id: {} successfully find", userEntity.getId());
     }
 
     @Override
@@ -41,10 +44,12 @@ public class UserServiceImpl implements UserService {
         UserEntity user = findUserById(userEntity.getId());
         userEntity.setId(user.getId());
         userRepository.save(user);
+        log.info("User with id: {} successfully updated", userEntity.getId());
     }
 
     @Override
     public void deleteUser(UserEntity userEntity) {
         userRepository.delete(userEntity);
+        log.info("User with id: {} successfully deleted", userEntity.getId());
     }
 }
