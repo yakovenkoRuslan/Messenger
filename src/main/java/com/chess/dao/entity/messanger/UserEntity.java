@@ -18,13 +18,14 @@ public class UserEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(unique = true, name = "username")
     private String username;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
+
+    @Column(unique = true, name = "email")
     private String email;
 
     @ManyToOne
