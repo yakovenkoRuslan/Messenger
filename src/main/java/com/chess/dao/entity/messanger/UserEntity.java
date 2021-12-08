@@ -27,7 +27,6 @@ public class UserEntity implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "status")
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", nullable = false)
     private StatusEntity status;

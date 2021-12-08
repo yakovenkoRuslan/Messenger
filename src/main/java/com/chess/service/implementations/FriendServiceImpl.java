@@ -26,7 +26,9 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void addNewFriend(UserEntity firstUser, UserEntity secondUser) {
-        FriendEntity friendEntity = new FriendEntity(firstUser, secondUser);
+        FriendEntity friendEntity = new FriendEntity();
+        friendEntity.setFirstUser(firstUser);
+        friendEntity.setSecondUser(secondUser);
         log.info(
                 "successfully created friendEntity with first user id: {} and second user id: {}",
                 firstUser.getId(), secondUser.getId());
@@ -37,11 +39,21 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void deleteFriend(UserEntity firstUser, UserEntity secondUser) {
-        FriendEntity friendEntity = new FriendEntity(firstUser, secondUser);
+        FriendEntity friendEntity = findFriendEntityByFirstUserAndSecondUser(
+                firstUser, secondUser);
         log.info(
                 "successfully created friendEntity with first user id: {} and second user id: {}",
                 firstUser.getId(), secondUser.getId());
-        friendRepository.delete(friendEntity);
+        if (friendEntity != null) {
+            friendRepository.delete(friendEntity);
+        }
         log.info("friendEntity {} successfully deleted", friendEntity);
+    }
+
+    @Override
+    public FriendEntity findFriendEntityByFirstUserAndSecondUser(
+            UserEntity firstUser, UserEntity secondUser) {
+        return friendRepository.findFriendEntityByFirstUserAndSecondUser(
+                firstUser, secondUser);
     }
 }
