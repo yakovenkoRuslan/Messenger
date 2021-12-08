@@ -1,4 +1,4 @@
-package com.chess.dao.entity;
+package com.chess.dao.entity.messanger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Data
@@ -28,12 +27,8 @@ public class UserEntity implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "friend")
-    @ManyToMany
-    private List<UserEntity> friend;
-
-    @Column(name = "rating")
-    private int rating;
-
-    private boolean available;
+    @Column(name = "status")
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", nullable = false)
+    private StatusEntity status;
 }

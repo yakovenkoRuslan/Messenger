@@ -1,29 +1,34 @@
-package com.chess.dao.entity;
+package com.chess.dao.entity.messanger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.sql.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "message")
-public class MessageEntity {
+public class MessageEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sender")
     @ManyToOne
-    private UserEntity userEntity;
+    @JoinColumn(name = "sender", referencedColumnName = "id", nullable = false)
+    private UserEntity sender;
 
-    @Column(name = "recipient")
     @ManyToOne
+    @JoinColumn(name = "recipient", referencedColumnName = "id", nullable = false)
     private UserEntity recipient;
 
     @Column(name = "text")
     private String msg;
+
+    @Column(name = "datetime")
+    Date date;
 }

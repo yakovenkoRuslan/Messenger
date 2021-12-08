@@ -1,0 +1,33 @@
+table user as u {
+  id int [pk]
+  username varchar
+  password varchar
+  email varchar
+  raiting int
+  status int
+}
+
+table status {
+  id int [pk]
+  name varchar
+}
+
+
+table friend {
+  first_user int [pk]
+  second_user int [pk]
+}
+
+table message {
+  id int [pk]
+  sender int
+  recipient int
+  text varchar
+  datetime date
+}
+
+Ref: user.status > status.id
+Ref: message.sender > user.id
+Ref: message.recipient > user.id
+Ref: friend.second_user > u.id
+Ref: friend.first_user > u.id

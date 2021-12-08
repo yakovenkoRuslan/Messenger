@@ -1,6 +1,6 @@
 package com.chess.service.interfaces;
 
-import com.chess.dao.entity.UserEntity;
+import com.chess.dao.entity.messanger.UserEntity;
 
 import java.util.List;
 

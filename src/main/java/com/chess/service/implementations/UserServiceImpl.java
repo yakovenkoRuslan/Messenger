@@ -1,6 +1,6 @@
 package com.chess.service.implementations;
 
-import com.chess.dao.entity.UserEntity;
+import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dao.repository.UserRepository;
 import com.chess.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;

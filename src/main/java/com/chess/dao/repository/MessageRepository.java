@@ -1,8 +1,12 @@
 package com.chess.dao.repository;
 
+import com.chess.dao.entity.messanger.MessageEntity;
+import com.chess.dao.entity.messanger.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MessageRepository
-        extends JpaRepository<MessageRepository, Long> {
+import java.util.List;
 
+public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
+    List<MessageEntity> findAllBySenderAndRecipient(UserEntity sender,
+            UserEntity recipient);
 }

@@ -1,4 +1,4 @@
-package com.chess.dao.entity;
+package com.chess.dao.entity.messanger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +11,11 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameTypeEntity implements Serializable {
-
+@Table(name = "status")
+public class StatusEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "name")
-//            @ManyToOne
     String name;
 }

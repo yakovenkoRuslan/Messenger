@@ -1,12 +1,12 @@
-package com.chess.dao.entity;
+package com.chess.dao.entity.messanger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.IgnoreForBinding;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
@@ -18,10 +18,12 @@ public class FriendEntity implements Serializable {
 
     @Id
     @ManyToOne
+    @JoinColumn(name = "first_user", referencedColumnName = "id", nullable = false)
     UserEntity firstUser;
 
     @Id
-    @ManyToOne()
+    @ManyToOne
+    @JoinColumn(name = "second_user", referencedColumnName = "id", nullable = false)
     UserEntity secondUser;
 
 }
