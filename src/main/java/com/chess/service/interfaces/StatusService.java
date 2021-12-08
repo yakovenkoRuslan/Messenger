@@ -1,4 +1,7 @@
 package com.chess.service.interfaces;
 
-public class StatusService {
+import com.chess.dao.entity.messanger.StatusEntity;
+
+public interface StatusService {
+    StatusEntity findStatusById(Long id);
 }
