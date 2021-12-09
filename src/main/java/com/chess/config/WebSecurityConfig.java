@@ -31,7 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/login", "/registration")
                 .permitAll().anyRequest().authenticated();
-
     }
 
     @Override
