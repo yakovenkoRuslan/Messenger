@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Slf4j
-@Component
 public class JwtTokenFilter extends GenericFilterBean {
 
     JwtTokenProvider jwtTokenProvider;
