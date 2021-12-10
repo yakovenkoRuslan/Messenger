@@ -1,9 +1,7 @@
 package com.chess.config;
 
 import com.chess.security.jwt.JwtConfigure;
-import com.chess.security.jwt.JwtTokenFilter;
 import com.chess.security.jwt.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,11 +38,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable().csrf().disable().sessionManagement()
+        http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll().anyRequest()
-                .authenticated().and().apply(jwtConfigure);
+                .authenticated().and()
+                .csrf().disable()
+//                .formLogin()
+//                .defaultSuccessUrl("/login")
+//                .failureUrl("/login?error=true").permitAll()
+                .apply(jwtConfigure);
     }
 
     @Override

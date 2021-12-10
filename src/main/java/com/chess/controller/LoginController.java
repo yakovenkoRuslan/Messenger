@@ -39,7 +39,7 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity login(
+    public ResponseEntity<Map<Object, Object>> login(
             @RequestBody AuthenticationRequestDto authenticationRequestDto) {
         try {
             String username = authenticationRequestDto.getUsername();
