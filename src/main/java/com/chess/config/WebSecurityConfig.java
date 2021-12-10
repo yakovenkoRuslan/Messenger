@@ -3,6 +3,7 @@ package com.chess.config;
 import com.chess.security.jwt.JwtConfigure;
 import com.chess.security.jwt.JwtTokenFilter;
 import com.chess.security.jwt.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,10 +24,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     final JwtTokenProvider jwtTokenProvider;
 
+    final JwtConfigure jwtConfigure;
+
     public WebSecurityConfig(UserDetailsService userDetailsService,
-            JwtTokenProvider jwtTokenProvider) {
+            JwtTokenProvider jwtTokenProvider, JwtConfigure jwtConfigure) {
         this.userDetailsService = userDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtConfigure = jwtConfigure;
     }
 
     @Bean
@@ -40,8 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll().anyRequest()
-                .authenticated().and()
-                .apply(new JwtConfigure(jwtTokenProvider));
+                .authenticated().and().apply(jwtConfigure);
     }
 
     @Override
