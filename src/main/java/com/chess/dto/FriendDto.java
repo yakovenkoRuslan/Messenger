@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequestDto {
+public class FriendDto {
+
     String username;
-    String password;
+    boolean isOnline;
+
 }
