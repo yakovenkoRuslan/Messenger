@@ -20,4 +20,9 @@ public class StatusServiceImpl implements StatusService {
     public StatusEntity findStatusById(Long id) {
         return statusRepository.findStatusEntityById(id);
     }
+
+    @Override
+    public StatusEntity findStatusByName(String name) {
+        return statusRepository.findStatusEntityByName(name);
+    }
 }

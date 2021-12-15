@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface StatusRepository extends JpaRepository<StatusEntity, Long> {
 
     StatusEntity findStatusEntityById(Long id);
+
+    StatusEntity findStatusEntityByName(String name);
 }

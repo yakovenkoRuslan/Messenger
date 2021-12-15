@@ -2,9 +2,12 @@ package com.chess.controller;
 
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dto.AuthenticationRequestDto;
+import com.chess.dto.UserDto;
+import com.chess.mapper.UserMapper;
 import com.chess.security.jwt.JwtTokenProvider;
 import com.chess.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,16 +33,19 @@ public class LoginController {
 
     final UserService userService;
 
+    final UserMapper userMapper;
+
     public LoginController(JwtTokenProvider jwtTokenProvider,
             AuthenticationManager authenticationManager,
-            UserService userService) {
+            UserService userService, UserMapper userMapper) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Map<Object, Object>> login(
+    public ResponseEntity<UserDto> login(
             @RequestBody AuthenticationRequestDto authenticationRequestDto) {
         try {
             String username = authenticationRequestDto.getUsername();
@@ -49,19 +55,15 @@ public class LoginController {
             UserEntity user = userService.findUserByUsername(username);
             log.info("user: {} find", user);
 
-            if (user == null) {
-                throw new UsernameNotFoundException(
-                        "User with username: " + username + " not found");
-            }
-
+            UserDto responseUser = userMapper.convertUserEntityToUserDtp(user);
             String token = jwtTokenProvider.createToken(user);
-
             log.info("token {} successfully created", token);
-            Map<Object, Object> response = new HashMap<>();
-            response.put("username", username);
-            response.put("token", token);
 
-            return ResponseEntity.ok(response);
+            responseUser.setAuthenticationToken(token);
+            responseUser.setOnline(true);
+
+
+            return ResponseEntity.ok(responseUser);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
         }
