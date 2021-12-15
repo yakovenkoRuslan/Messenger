@@ -3,6 +3,7 @@ package com.chess.controller;
 import com.chess.dto.UserDto;
 import com.chess.service.interfaces.RegisterService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,10 +26,10 @@ public class RegisterController {
         log.info("Registering user: {} with username: {} and email: {}", userDto, userDto.getUsername(), userDto.getEmail());
         try {
             userDto = registerService.registerUser(userDto);
-            ResponseEntity.ok(userDto);
+            return ResponseEntity.ok(userDto);
         } catch (Exception e) {
-            log.error("exception" + e);
+            log.error("Exceptions in register controller: " + e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userDto);
         }
-        return null;
     }
 }

@@ -4,5 +4,5 @@ import com.chess.dto.UserDto;
 
 public interface RegisterService {
 
-    UserDto registerUser(UserDto userDto);
+    UserDto registerUser(UserDto userDto) throws Exception;
 }
