@@ -24,11 +24,10 @@ public class UserEntity implements Serializable {
     @Column(name = "password")
     private String password;
 
-
     @Column(unique = true, name = "email")
     private String email;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "id", nullable = false)
+    @JoinColumn(referencedColumnName = "id")
     private StatusEntity status;
 }

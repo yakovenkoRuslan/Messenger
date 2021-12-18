@@ -7,20 +7,15 @@ import com.chess.mapper.UserMapper;
 import com.chess.security.jwt.JwtTokenProvider;
 import com.chess.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -55,13 +50,12 @@ public class LoginController {
             UserEntity user = userService.findUserByUsername(username);
             log.info("user: {} find", user);
 
-            UserDto responseUser = userMapper.convertUserEntityToUserDtp(user);
+            UserDto responseUser = userMapper.convertUserEntityToUserDto(user);
             String token = jwtTokenProvider.createToken(user);
             log.info("token {} successfully created", token);
 
             responseUser.setAuthenticationToken(token);
             responseUser.setOnline(true);
-
 
             return ResponseEntity.ok(responseUser);
         } catch (AuthenticationException e) {

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FriendService {
 
-    List<FriendEntity> findAllFriends(FriendEntity user);
+    List<FriendEntity> findAllFriends(UserEntity user);
 
     void addNewFriend(UserEntity firstUser, UserEntity secondUser);
 

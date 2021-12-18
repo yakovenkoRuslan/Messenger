@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FriendDto {
 
-    String username;
-    boolean isOnline;
-
+    String firstUsername;
+    String secondUsername;
 }

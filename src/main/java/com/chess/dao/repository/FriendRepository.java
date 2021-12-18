@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FriendRepository extends JpaRepository<FriendEntity, Long> {
 
-    List<FriendEntity> findAllByFirstUser(FriendEntity friendEntity);
+    List<FriendEntity> findAllByFirstUser(UserEntity user);
 
     FriendEntity findFriendEntityByFirstUserAndSecondUser(
             UserEntity firstUser, UserEntity secondUser);

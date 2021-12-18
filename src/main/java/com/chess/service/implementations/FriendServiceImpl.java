@@ -20,7 +20,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public List<FriendEntity> findAllFriends(FriendEntity user) {
+    public List<FriendEntity> findAllFriends(UserEntity user) {
         return friendRepository.findAllByFirstUser(user);
     }
 
