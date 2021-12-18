@@ -1,12 +1,14 @@
 
 import * as React from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Alert, Button, Text, TextInput, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {HomeScreen} from "./Home"
 import { SettingsScreen} from './Setting';
 import { FriendsScreen } from './Friends';
 import { Profile } from './Profile';
+import * as SecureStore from 'expo-secure-store';
+
 const AuthContext = React.createContext();
 
 function SplashScreen() {
@@ -17,18 +19,7 @@ function SplashScreen() {
   );
 }
 
-// function HomeScreen() {
-//   const { signOut } = React.useContext(AuthContext);
-
-//   return (
-//     <View>
-//       <Text>Signed in!</Text>
-//       <Button title="Sign out" onPress={signOut} />
-//     </View>
-//   );
-// }
-
-function SignInScreen() {
+function SignInScreen({navigation}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -47,9 +38,49 @@ function SignInScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign in" onPress={() => signIn({ username, password })} />
+      <Button title="Sign in" onPress={() => signIn({ username: username, password: password })} />
+      <Button title="Sign up screen" onPress={() => navigation.navigate("SignUp")} style={{
+          flex:1,
+          flexDirection:'row',
+          alignItems:'center',
+          justifyContent:'center'
+      }}
+      />
     </View>
   );
+}
+
+function SignUpScreen() {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const { singUp } = React.useContext(AuthContext);
+
+  return (
+    <View>
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        placeholder="email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button title="Sign up" onPress={() => signUp({ username: username, email: email, password: password })} />
+    </View>
+  );
+}
+
+async function save(key, value) {
+  await SecureStore.setItemAsync(key, value);
 }
 
 const Stack = createStackNavigator();
@@ -92,7 +123,7 @@ export default function App({ navigation }) {
 
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
-        // userToken = await SecureStore.getItemAsync('userToken');
+         userToken = await SecureStore.getItemAsync('userToken');
       } catch (e) {
         // Restoring token failed
       }
@@ -110,21 +141,57 @@ export default function App({ navigation }) {
   const authContext = React.useMemo(
     () => ({
       signIn: async (data) => {
+        try {
+
+        const response = await fetch('https://191.64.224.159:8080/login', {
+          method: 'POST',
+          body: JSON.stringify({
+              username: data.username,
+              password: data.password
+            })
+          });
+          
+          const json = await response.json();
+          save('userToken', json.autenticationToken);
+          dispatch({ type: 'SIGN_IN', token: json.autenticationToken});
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
         // In a production app, we need to send some data (usually username, password) to server and get a token
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+       
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       signUp: async (data) => {
+        try {
+          const response = await fetch('https://191.64.224.159:8080/registration', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: data.username,
+                email:data.email,
+                password: data.password
+              })
+            });
+            
+          const json = await response.json();
+
+          save('userToken', json.autenticationToken);
+          dispatch({ type: 'SIGN_IN', token: json.autenticationToken});
+        }catch(error){
+          console.log(error);
+          Alert.alert('Sign up', 'Invalid sing up data');
+        }
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        
       },
     }),
     []
@@ -138,7 +205,7 @@ export default function App({ navigation }) {
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
           ) : state.userToken == null ? (
-            // No token found, user isn't signed in
+            <>
             <Stack.Screen
               name="SignIn"
               component={SignInScreen}
@@ -148,6 +215,9 @@ export default function App({ navigation }) {
                 animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
+
+            <Stack.Screen name="SignUp" component={SignUpScreen}/>
+            </>
           ) : (
            <>
             <Stack.Screen name="Home" component={HomeScreen} />
