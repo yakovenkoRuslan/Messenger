@@ -23,29 +23,33 @@ public class SettingsController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> userInfo(@PathVariable Long id) {
-        UserEntity user;
+    @GetMapping
+    public ResponseEntity<UserDto> userInfo(@RequestBody UserDto userDto) {
         try {
-            user = userService.findUserById(id);
-            UserDto responseUser = userMapper.convertUserEntityToUserDto(user);
-            userService.editUser(user);
-            return ResponseEntity.ok(responseUser);
+            userService.editUser(userDto);
+            userService.findUserByUsername(userDto.getUsername());
+            return ResponseEntity.ok(userDto);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @PutMapping("/{id}")
-    ResponseEntity<UserDto> edit(@RequestBody UserDto userDto) {
+    @PutMapping
+    public ResponseEntity<UserDto> edit(@RequestBody UserDto userDto) {
         UserEntity user;
         try {
-            user = userMapper.convertUserDtoToUserEntity(userDto);
-            user.setId(userDto.getId());
-            userService.saveUser(user);
+            userService.editUser(userDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // Нужно допилить  удаление  (redirect:/logout)
+    @DeleteMapping
+    public ResponseEntity<UserDto> delete(@RequestBody UserDto userDto) {
+        userService.deleteUser(
+                userService.findUserByUsername(userDto.getUsername()));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

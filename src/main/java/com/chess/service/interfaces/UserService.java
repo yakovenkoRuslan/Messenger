@@ -1,6 +1,8 @@
 package com.chess.service.interfaces;
 
 import com.chess.dao.entity.messanger.UserEntity;
+import com.chess.dto.UserDto;
+import com.chess.service.exceptions.ValidationException;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface UserService {
 
     void saveUser(UserEntity userEntity);
 
-    void editUser(UserEntity userEntity);
+    void editUser(UserDto userDto) throws ValidationException;
 
     void deleteUser(UserEntity userEntity);
 
