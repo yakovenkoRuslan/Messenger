@@ -8,6 +8,7 @@ import com.chess.service.interfaces.UserService;
 import com.chess.service.validator.UserDtoValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +19,14 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    final PasswordEncoder passwordEncoder;
-
     final UserDtoValidator userDtoValidator;
 
     final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository,
-            UserDtoValidator userDtoValidator, PasswordEncoder passwordEncoder) {
+            UserDtoValidator userDtoValidator) {
         this.userRepository = userRepository;
         this.userDtoValidator = userDtoValidator;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = findUserByUsername(userDto.getUsername());
         if (!Objects.equals(userDto.getPassword(), null)
                 && userDtoValidator.isValidPassword(userDto.getPassword())) {
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            user.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
         }
         if (!Objects.equals(userDto.getEmail(), null)
                 && userDtoValidator.isValidEmail(userDto.getEmail())) {
