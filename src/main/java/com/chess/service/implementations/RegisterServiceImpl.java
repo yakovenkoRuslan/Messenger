@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -36,6 +38,7 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
+    @Transactional
     public UserDto registerUser(UserDto userDto) throws Exception {
         UserEntity userEntity;
         try {

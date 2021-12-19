@@ -7,6 +7,7 @@ import com.chess.service.interfaces.FriendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -20,11 +21,13 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    @Transactional
     public List<FriendEntity> findAllFriends(UserEntity user) {
         return friendRepository.findAllByFirstUser(user);
     }
 
     @Override
+    @Transactional
     public void addNewFriend(UserEntity firstUser, UserEntity secondUser) {
         if (friendRepository.findFriendEntityByFirstUserAndSecondUser(firstUser,
                 secondUser) != null) {
@@ -43,6 +46,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    @Transactional
     public void deleteFriend(UserEntity firstUser, UserEntity secondUser) {
         FriendEntity friendEntity = findFriendEntityByFirstUserAndSecondUser(
                 firstUser, secondUser);
@@ -56,6 +60,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
+    @Transactional
     public FriendEntity findFriendEntityByFirstUserAndSecondUser(
             UserEntity firstUser, UserEntity secondUser) {
         return friendRepository.findFriendEntityByFirstUserAndSecondUser(

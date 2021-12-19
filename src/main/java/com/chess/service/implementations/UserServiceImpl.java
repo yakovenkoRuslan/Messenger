@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,27 +35,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserEntity findUserById(Long id) {
         return userRepository.findUserEntityById(id);
     }
 
     @Override
+    @Transactional
     public UserEntity findUserByUsername(String username) {
         return userRepository.findUserEntityByUsername(username);
     }
 
     @Override
+    @Transactional
     public List<UserEntity> findAllUsers() {
         return userRepository.findAllByIdNotNull();
     }
 
     @Override
+    @Transactional
     public void saveUser(UserEntity userEntity) {
         userRepository.save(userEntity);
         log.info("User with id: {} successfully find", userEntity.getId());
     }
 
     @Override
+    @Transactional
     public void editUser(UserDto userDto) throws ValidationException {
         UserEntity user = findUserByUsername(userDto.getUsername());
         if (!Objects.equals(userDto.getPassword(), null)
@@ -68,11 +74,12 @@ public class UserServiceImpl implements UserService {
         log.info("Prepared user for edit : id {} username {} email {}",
                 user.getId(), user.getUsername(), user.getEmail());
         userRepository.save(user);
-        log.info("User with username: {} successfully updated",
+        log.info("User with id: {} successfully updated",
                 userDto.getId());
     }
 
     @Override
+    @Transactional
     public void deleteUser(UserEntity userEntity) {
         userEntity.setStatus(statusService.findStatusById(2L));
         log.info("User with id: {} successfully deleted", userEntity.getId());

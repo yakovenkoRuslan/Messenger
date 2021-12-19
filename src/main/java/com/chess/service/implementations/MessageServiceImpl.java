@@ -10,6 +10,7 @@ import com.chess.util.MessageEntityComparator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional
     public List<MessageEntity> findAllMessagesWithCurrentUsers(
             UserEntity sender, UserEntity recipient) throws ServiceException {
 
@@ -54,12 +56,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional
     public void addNewMessage(MessageEntity messageEntity) {
         messageRepository.save(messageEntity);
         log.info("message successfully saved");
     }
 
     @Override
+    @Transactional
     public void editMessage(MessageDto messageDto) {
         MessageEntity messageEntity = messageRepository.findMessageEntityById(
                 messageDto.getId());
@@ -69,6 +73,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional
     public void deleteMessage(Long id) {
         messageRepository.delete(messageRepository.findMessageEntityById(id));
         log.info("message with id {} successfully deleted", id);

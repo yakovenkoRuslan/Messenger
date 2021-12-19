@@ -25,6 +25,7 @@ public class FriendMapper {
         userDto.setUsername(userEntity.getUsername());
 
 //        //fix in the future
+        userDto.setEmail(userEntity.getEmail());
         userDto.setOnline(true);
         return userDto;
     }
