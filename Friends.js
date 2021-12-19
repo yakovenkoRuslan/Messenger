@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {Modal,TextInput, FlatList, Button, View, Text,StyleSheet } from 'react-native';
+import {Alert, Modal,TextInput, FlatList, Button, View, Text,StyleSheet } from 'react-native';
+import { getUserInfo } from './UserStore';
+import axios from 'axios';
 
 function FriendComponent(props){
   const [modalVisible, setModalVisible] = useState(false);
@@ -36,32 +38,94 @@ function FriendComponent(props){
     );
   }
   
+  const FriendsContext = React.createContext();
+
   export const FriendsScreen = ({navigation})=> {
+    const [friendsList, setFriendsList] = useState([]);
+    const [friendToAdd, setFriendToAdd] = useState('');
+
+    const UpdateFriendsList = ()=>{
+      getUserInfo('userToken').then(token=>{
+        console.log("token : ")
+        console.log(token);
+
+        getUserInfo('userName').then(name=>{
+
+        console.log(name);
+        axios.post("http://192.168.0.103:8080/friends",{
+          username:name
+        }, {
+          headers:{
+            Authorization: 'Bearer_' + token
+          }
+        }).then(data=>{
+          console.log("data:"); 
+          console.log(data.data);
+          setFriendsList(data.data);
+        }).catch(error=>console.log(error));
+        })
+      });
+
+    }
+
+     React.useEffect(() => {
+
+      UpdateFriendsList();
+      
+      }, []);
     return (
-      <View>
-        <FlatList
-          data={[
-            {key: 'Devin'},
-            {key: 'Dan'},
-            {key: 'Dominic'},
-            {key: 'Jackson'},
-            {key: 'James'},
-            {key: 'Joel'},
-            {key: 'John'},
-            {key: 'Jillian'},
-            {key: 'Jimmy'},
-            {key: 'Julie'},
-          ]}
-          renderItem={({item}) => (
-            <FriendComponent name={item.key}/>
-          )}
-        />
-      </View>
+      <FriendsContext.Provider value={FriendsContext}>
+        <View>
+          <FlatList
+            data = {friendsList}
+            renderItem={({item}) => (
+              <FriendComponent name={item.username}/>
+            )}
+          />
+          <Button title="Add friend" onPress={()=>{
+            
+            getUserInfo('userToken').then(token=>{
+            console.log(friendToAdd);
+            getUserInfo('userName').then(name=>{
+              console.log(name);
+            axios.post("http://192.168.0.103:8080/friends/add-friend",{
+              firstUsername:name,
+              secondUsername:friendToAdd
+            }, {
+              headers:{
+                Authorization: 'Bearer_' + token
+              }
+            }
+            ).catch(error=>{
+              console.log(error)
+            })
+            UpdateFriendsList();
+           } )
+
+          });
+
+          }
+          } color="purple"/>
+         
+           <TextInput 
+           placeholder='Friend to add username'
+           value={friendToAdd} style={modal_styles.input} onChangeText={setFriendToAdd}/> 
+        </View>
+      </FriendsContext.Provider>
     );
   }
 
-  
+
 const modal_styles = StyleSheet.create({
+  input: {
+    borderWidth:4,
+    height: 70,
+    backgroundColor: '#ffffff',
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
