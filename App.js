@@ -8,6 +8,7 @@ import { SettingsScreen} from './Setting';
 import { FriendsScreen } from './Friends';
 import { Profile } from './Profile';
 import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
 
 const AuthContext = React.createContext();
 
@@ -50,11 +51,11 @@ function SignInScreen({navigation}) {
   );
 }
 
-function SignUpScreen() {
+function SignUpScreen({navigation}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
-  const { singUp } = React.useContext(AuthContext);
+  const { signUp } = React.useContext(AuthContext);
 
   return (
     <View>
@@ -74,7 +75,8 @@ function SignUpScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign up" onPress={() => signUp({ username: username, email: email, password: password })} />
+      <Button title="Sign up" onPress={() => signUp({ username: username, email: email, password: password,
+      nav: navigation })} />
     </View>
   );
 }
@@ -123,7 +125,7 @@ export default function App({ navigation }) {
 
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
-         userToken = await SecureStore.getItemAsync('userToken');
+         //userToken = await SecureStore.getItemAsync('userToken');
       } catch (e) {
         // Restoring token failed
       }
@@ -140,25 +142,20 @@ export default function App({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data) => {
-        try {
-
-        const response = await fetch('https://191.64.224.159:8080/login', {
-          method: 'POST',
-          body: JSON.stringify({
-              username: data.username,
-              password: data.password
-            })
-          });
-          
-          const json = await response.json();
-          save('userToken', json.autenticationToken);
-          dispatch({ type: 'SIGN_IN', token: json.autenticationToken});
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
+      signIn: async (dataIn) => {
+        console.log(dataIn);
+        axios.post("http://192.168.0.101:8080/login", {
+          username: dataIn.username,
+          password: dataIn.password
+        }).then(res=>{
+          console.log(res.data),
+          //save('userToken', data.data.autenticationToken),
+          dispatch({ type: 'SIGN_IN', token: res.data.authenticationToken})
+        }).catch(error => console.log(error));
+        
+        // } //finally {
+        //   setLoading(false);
+        // }
         // In a production app, we need to send some data (usually username, password) to server and get a token
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
@@ -167,25 +164,22 @@ export default function App({ navigation }) {
        
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
-      signUp: async (data) => {
-        try {
-          const response = await fetch('https://191.64.224.159:8080/registration', {
-            method: 'POST',
-            body: JSON.stringify({
-                username: data.username,
-                email:data.email,
-                password: data.password
-              })
-            });
-            
-          const json = await response.json();
+      signUp: async (dataIn) => {
 
-          save('userToken', json.autenticationToken);
-          dispatch({ type: 'SIGN_IN', token: json.autenticationToken});
-        }catch(error){
-          console.log(error);
-          Alert.alert('Sign up', 'Invalid sing up data');
-        }
+        console.log(dataIn);
+        axios.post("http://192.168.0.101:8080/registration", {
+          username: dataIn.username,
+          email:dataIn.email,
+          password: dataIn.password
+        }).then(data=>{
+          console.log(data),
+          dataIn.nav.navigate("SignIn")
+          //save('userToken', data.data.autenticationToken),
+           //dispatch({ type: 'SIGN_IN', token: data.data.authenticationToken})
+        }).catch(error => {console.log(error),
+          Alert.alert('Sign up', 'Invalid sing up data')});
+
+        
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
