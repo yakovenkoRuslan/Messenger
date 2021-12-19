@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, Button, TextInput, FlatList, SafeAreaView,ScrollView} from 'react-native'
+import {View, Text, StyleSheet, Button, TextInput, FlatList} from 'react-native'
 
 import { useFocusEffect } from '@react-navigation/native';
 import { removeUserInfo, getUserInfo } from './UserStore';
@@ -77,7 +77,6 @@ export function ChatScreen(){
             <View style={styles.top}>
         <FlatList nestedScrollEnabled  
           data={messagesList}
-          initialScrollIndex={messagesList.length - 1}
           renderItem={({item}) => (
                 username == item.sender? 
                 (<View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
