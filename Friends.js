@@ -18,6 +18,7 @@ function FriendComponent(props){
         >
           <View >
             <View style={modal_styles.modalView}>
+            <Text style={modal_styles.modalText}>Email: {props.email}</Text>
               <Text style={modal_styles.modalText}>Send message to {props.name}</Text>
               <Button title="Messages"
                 style={[modal_styles.button, modal_styles.buttonClose]}
@@ -84,7 +85,7 @@ function FriendComponent(props){
           <FlatList
             data = {friendsList}
             renderItem={({item}) => (
-              <FriendComponent name={item.username} nav = {navigation}/>
+              <FriendComponent email={item.email} name={item.username} nav = {navigation}/>
             )}
           />
           <Button title="Add friend" onPress={()=>{
