@@ -39,6 +39,10 @@ public class MessageServiceImpl implements MessageService {
 
         messagesFromFirstUser.addAll(messagesFromSecondUser);
         messagesFromFirstUser.sort(new MessageEntityComparator());
+
+        log.info("Count of all messages between {} and {} is {}",
+                recipient.getUsername(), sender.getUsername(),
+                messagesFromFirstUser.size());
         return messagesFromFirstUser;
     }
 
