@@ -39,10 +39,10 @@ public class FriendController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> friend(@RequestBody UserDto userDto) {
+    public ResponseEntity<List<UserDto>> friend(
+            @RequestParam(name = "user") String username) {
         try {
-            UserEntity user = userService.findUserByUsername(
-                    userDto.getUsername());
+            UserEntity user = userService.findUserByUsername(username);
             List<FriendEntity> friends = friendService.findAllFriends(user);
             if (friends == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
