@@ -26,6 +26,11 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void addNewFriend(UserEntity firstUser, UserEntity secondUser) {
+        if (friendRepository.findFriendEntityByFirstUserAndSecondUser(firstUser,
+                secondUser) != null) {
+            log.info("friend {} already exists!", secondUser.getUsername());
+            return;
+        }
         FriendEntity friendEntity = new FriendEntity();
         friendEntity.setFirstUser(firstUser);
         friendEntity.setSecondUser(secondUser);

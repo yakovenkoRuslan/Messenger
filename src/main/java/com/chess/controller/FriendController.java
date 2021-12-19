@@ -40,8 +40,11 @@ public class FriendController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> friend(
-            @RequestParam(name = "user") String username) {
+            @RequestParam(name = "user", defaultValue = "Noname") String username) {
         try {
+            if ("Noname".equals(username)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
             UserEntity user = userService.findUserByUsername(username);
             List<FriendEntity> friends = friendService.findAllFriends(user);
             if (friends == null) {
@@ -61,7 +64,7 @@ public class FriendController {
         UserEntity user = userService.findUserByUsername(
                 friendDto.getSecondUsername());
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
 
         friendService.addNewFriend(
@@ -78,7 +81,5 @@ public class FriendController {
                 userService.findUserByUsername(friendDto.getFirstUsername()),
                 userService.findUserByUsername(friendDto.getSecondUsername()));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
-
 }
