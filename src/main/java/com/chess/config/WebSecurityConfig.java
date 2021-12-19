@@ -1,7 +1,7 @@
 package com.chess.config;
 
-import com.chess.service.implementations.jwt.JwtConfigure;
-import com.chess.service.implementations.jwt.JwtTokenProvider;
+import com.chess.security.jwt.JwtConfigure;
+import com.chess.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

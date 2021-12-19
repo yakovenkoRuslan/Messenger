@@ -4,6 +4,7 @@ import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dao.repository.UserRepository;
 import com.chess.dto.UserDto;
 import com.chess.service.exceptions.ValidationException;
+import com.chess.service.interfaces.StatusService;
 import com.chess.service.interfaces.UserService;
 import com.chess.service.validator.UserDtoValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,17 @@ import java.util.Objects;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    final StatusService statusService;
+
     final UserDtoValidator userDtoValidator;
 
     final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository,
-            UserDtoValidator userDtoValidator) {
+            UserDtoValidator userDtoValidator, StatusService statusService) {
         this.userRepository = userRepository;
         this.userDtoValidator = userDtoValidator;
+        this.statusService = statusService;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UserEntity userEntity) {
-        userRepository.delete(userEntity);
+        userEntity.setStatus(statusService.findStatusById(2L));
         log.info("User with id: {} successfully deleted", userEntity.getId());
     }
 }

@@ -1,4 +1,4 @@
-package com.chess.service.implementations.jwt;
+package com.chess.security.jwt;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
