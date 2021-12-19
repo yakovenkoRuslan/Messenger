@@ -7,10 +7,11 @@ import {HomeScreen} from "./Home"
 import { SettingsScreen} from './Setting';
 import { FriendsScreen } from './Friends';
 import { Profile } from './Profile';
-import * as SecureStore from 'expo-secure-store';
+
+import { saveUserInfo, getUserInfo } from './UserStore';
 import axios from 'axios';
 
-const AuthContext = React.createContext();
+export const AuthContext = React.createContext();
 
 function SplashScreen() {
   return (
@@ -81,9 +82,6 @@ function SignUpScreen({navigation}) {
   );
 }
 
-async function save(key, value) {
-  await SecureStore.setItemAsync(key, value);
-}
 
 const Stack = createStackNavigator();
 
@@ -125,7 +123,8 @@ export default function App({ navigation }) {
 
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
-         //userToken = await SecureStore.getItemAsync('userToken');
+         userToken = await getUserInfo("userToken");
+         //console.log(userToken);
       } catch (e) {
         // Restoring token failed
       }
@@ -143,13 +142,15 @@ export default function App({ navigation }) {
   const authContext = React.useMemo(
     () => ({
       signIn: async (dataIn) => {
+        //console.log(state.userToken);
         console.log(dataIn);
-        axios.post("http://192.168.0.101:8080/login", {
+        axios.post("http://192.168.0.103:8080/login", {
           username: dataIn.username,
           password: dataIn.password
         }).then(res=>{
-          console.log(res.data),
-          //save('userToken', data.data.autenticationToken),
+          //console.log(res),  
+          saveUserInfo('userToken', res.data.authenticationToken),
+          saveUserInfo('userName', res.data.username),
           dispatch({ type: 'SIGN_IN', token: res.data.authenticationToken})
         }).catch(error => console.log(error));
         
@@ -167,7 +168,7 @@ export default function App({ navigation }) {
       signUp: async (dataIn) => {
 
         console.log(dataIn);
-        axios.post("http://192.168.0.101:8080/registration", {
+        axios.post("http://192.168.0.103:8080/registration", {
           username: dataIn.username,
           email:dataIn.email,
           password: dataIn.password
@@ -217,7 +218,7 @@ export default function App({ navigation }) {
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Friends"  component = {FriendsScreen}/>
-            <Stack.Screen name="Settings" component = {SettingsScreen} /> 
+            <Stack.Screen name="Settings" children={() => <SettingsScreen auth={AuthContext} />}/>
             </>
           )}
         </Stack.Navigator>

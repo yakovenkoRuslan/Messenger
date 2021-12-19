@@ -36,11 +36,11 @@ export function HomeScreen({ navigation }) {
         onChange={item => {
           //setDropdown(item.value);
           //setDropdown("Fuckyou"),
-          console.log('selected', item);
+         // console.log('selected', item);
           navigation.navigate(item.page)
         }}
          renderLeftIcon={() => (
-             <Text>Fuck: </Text> 
+             <Text>Menu</Text> 
          )}
         renderItem={item => _renderItem(item)}
     ></Dropdown>
