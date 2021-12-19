@@ -4,9 +4,11 @@ import com.chess.dao.entity.messanger.MessageEntity;
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dao.repository.MessageRepository;
 import com.chess.service.interfaces.MessageService;
+import com.chess.util.MessageEntityComparator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,7 +24,22 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<MessageEntity> findAllMessagesWithCurrentUsers(
             UserEntity sender, UserEntity recipient) {
-        return messageRepository.findAllBySenderAndRecipient(sender, recipient);
+        List<MessageEntity> messagesFromFirstUser = messageRepository.findAllBySenderAndRecipient(
+                sender, recipient);
+        List<MessageEntity> messagesFromSecondUser = messageRepository.findAllBySenderAndRecipient(
+                recipient, sender);
+
+        messagesFromFirstUser = messagesFromFirstUser != null ?
+                messagesFromFirstUser :
+                new ArrayList<>();
+
+        messagesFromSecondUser = messagesFromSecondUser != null ?
+                messagesFromSecondUser :
+                new ArrayList<>();
+
+        messagesFromFirstUser.addAll(messagesFromSecondUser);
+        messagesFromFirstUser.sort(new MessageEntityComparator());
+        return messagesFromFirstUser;
     }
 
     @Override

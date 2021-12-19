@@ -1,4 +1,4 @@
-package com.chess.security.jwt;
+package com.chess.service.implementations.jwt;
 
 import com.chess.dao.entity.messanger.UserEntity;
 import io.jsonwebtoken.*;

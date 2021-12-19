@@ -4,7 +4,7 @@ import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dto.AuthenticationRequestDto;
 import com.chess.dto.UserDto;
 import com.chess.mapper.UserMapper;
-import com.chess.security.jwt.JwtTokenProvider;
+import com.chess.service.implementations.jwt.JwtTokenProvider;
 import com.chess.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
