@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState} from 'react';
 import {Alert, Modal,TextInput, FlatList, Button, View, Text,StyleSheet } from 'react-native';
-import { getUserInfo } from './UserStore';
+import { getUserInfo, saveUserInfo } from './UserStore';
 import axios from 'axios';
 
 function FriendComponent(props){
@@ -19,11 +19,15 @@ function FriendComponent(props){
           <View >
             <View style={modal_styles.modalView}>
               <Text style={modal_styles.modalText}>Send message to {props.name}</Text>
-              <TextInput style={{borderWidth:0.3}}/>
-              <Button title="Dismiss"
+              <Button title="Messages"
                 style={[modal_styles.button, modal_styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}/>
-              <Button title="Send"
+                onPress={() => {
+                    saveUserInfo('chatUsername', props.name).then(
+                      props.nav.navigate("Messages"),
+                      setModalVisible(!modalVisible)
+                    )
+                  }}/>
+              <Button title="Close"
               style={[modal_styles.button, modal_styles.buttonClose]}
               onPress={() => (
                 //Send
@@ -33,7 +37,10 @@ function FriendComponent(props){
         </Modal>
         <Button title={props.name}
           style={[modal_styles.button, modal_styles.buttonOpen]}
-          onPress={() => setModalVisible(true)}/>
+          onPress={() => {
+              //request for the profile settings
+              setModalVisible(true)
+            }}/>
       </View>
     );
   }
@@ -52,9 +59,7 @@ function FriendComponent(props){
         getUserInfo('userName').then(name=>{
 
         console.log(name);
-        axios.post("http://192.168.0.103:8080/friends",{
-          username:name
-        }, {
+        axios.get("http://192.168.0.103:8080/friends?user="+name,{
           headers:{
             Authorization: 'Bearer_' + token
           }
@@ -79,7 +84,7 @@ function FriendComponent(props){
           <FlatList
             data = {friendsList}
             renderItem={({item}) => (
-              <FriendComponent name={item.username}/>
+              <FriendComponent name={item.username} nav = {navigation}/>
             )}
           />
           <Button title="Add friend" onPress={()=>{

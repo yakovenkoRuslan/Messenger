@@ -7,6 +7,7 @@ import {HomeScreen} from "./Home"
 import { SettingsScreen} from './Setting';
 import { FriendsScreen } from './Friends';
 import { Profile } from './Profile';
+import { ChatScreen } from './Messages';
 
 import { saveUserInfo, getUserInfo } from './UserStore';
 import axios from 'axios';
@@ -219,6 +220,7 @@ export default function App({ navigation }) {
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Friends"  component = {FriendsScreen}/>
             <Stack.Screen name="Settings" children={() => <SettingsScreen auth={AuthContext} />}/>
+            <Stack.Screen name="Messages"  component = {ChatScreen}/>
             </>
           )}
         </Stack.Navigator>

@@ -20,4 +20,14 @@ export async function getUserInfo(key) {
       }
       return null;
   }
+
+export async function removeUserInfo(key) {
+    try {
+        await AsyncStorage.removeItem(key);
+        
+    }
+    catch(exception) {
+        console.log(exeption)
+    }
+}
   
