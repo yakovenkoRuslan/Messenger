@@ -28,6 +28,6 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void addNewMessage(MessageEntity messageEntity) {
         messageRepository.save(messageEntity);
-        log.info("message with id: {} successfully saved", messageEntity.getId());
+        log.info("message successfully saved");
     }
 }
