@@ -3,6 +3,8 @@ package com.chess.service.implementations;
 import com.chess.dao.entity.messanger.MessageEntity;
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dao.repository.MessageRepository;
+import com.chess.dto.MessageDto;
+import com.chess.service.exceptions.ServiceException;
 import com.chess.service.interfaces.MessageService;
 import com.chess.util.MessageEntityComparator;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageEntity> findAllMessagesWithCurrentUsers(
-            UserEntity sender, UserEntity recipient) {
+            UserEntity sender, UserEntity recipient) throws ServiceException {
+
         List<MessageEntity> messagesFromFirstUser = messageRepository.findAllBySenderAndRecipient(
                 sender, recipient);
         List<MessageEntity> messagesFromSecondUser = messageRepository.findAllBySenderAndRecipient(
@@ -40,6 +43,10 @@ public class MessageServiceImpl implements MessageService {
         messagesFromFirstUser.addAll(messagesFromSecondUser);
         messagesFromFirstUser.sort(new MessageEntityComparator());
 
+        if (recipient == null || sender == null) {
+            throw new ServiceException("Recipient or sender not exists!");
+        }
+
         log.info("Count of all messages between {} and {} is {}",
                 recipient.getUsername(), sender.getUsername(),
                 messagesFromFirstUser.size());
@@ -50,5 +57,20 @@ public class MessageServiceImpl implements MessageService {
     public void addNewMessage(MessageEntity messageEntity) {
         messageRepository.save(messageEntity);
         log.info("message successfully saved");
+    }
+
+    @Override
+    public void editMessage(MessageDto messageDto) {
+        MessageEntity messageEntity = messageRepository.findMessageEntityById(
+                messageDto.getId());
+        messageEntity.setMsg(messageDto.getMsg());
+        messageRepository.save(messageEntity);
+        log.info("message with id {} successfully edited", messageDto.getId());
+    }
+
+    @Override
+    public void deleteMessage(Long id) {
+        messageRepository.delete(messageRepository.findMessageEntityById(id));
+        log.info("message with id {} successfully deleted", id);
     }
 }
