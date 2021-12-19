@@ -11,9 +11,11 @@ public interface MessageService {
     List<MessageEntity> findAllMessagesWithCurrentUsers(UserEntity sender,
             UserEntity recipient) throws ServiceException;
 
+    MessageEntity findMessageEntityById(Long id);
     void addNewMessage(MessageEntity messageEntity);
 
     void editMessage(MessageDto messageDto);
 
     void deleteMessage(Long id);
+
 }

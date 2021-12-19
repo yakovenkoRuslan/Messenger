@@ -3,6 +3,7 @@ package com.chess.service.implementations;
 import com.chess.dao.entity.messanger.FriendEntity;
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dao.repository.FriendRepository;
+import com.chess.service.exceptions.ServiceException;
 import com.chess.service.interfaces.FriendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     @Transactional
     public void addNewFriend(UserEntity firstUser, UserEntity secondUser) {
-        if (friendRepository.findFriendEntityByFirstUserAndSecondUser(firstUser,
+        if (findFriendEntityByFirstUserAndSecondUser(firstUser,
                 secondUser) != null) {
             log.info("friend {} already exists!", secondUser.getUsername());
             return;
@@ -47,7 +48,13 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     @Transactional
-    public void deleteFriend(UserEntity firstUser, UserEntity secondUser) {
+    public void deleteFriend(UserEntity firstUser, UserEntity secondUser)
+            throws ServiceException {
+
+        if (firstUser == null || secondUser == null) {
+            throw new ServiceException("FirstUser or secondUser is null!");
+        }
+
         FriendEntity friendEntity = findFriendEntityByFirstUserAndSecondUser(
                 firstUser, secondUser);
         log.info(

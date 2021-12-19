@@ -57,6 +57,12 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
+    public MessageEntity findMessageEntityById(Long id) {
+        return messageRepository.findMessageEntityById(id);
+    }
+
+    @Override
+    @Transactional
     public void addNewMessage(MessageEntity messageEntity) {
         messageRepository.save(messageEntity);
         log.info("message successfully saved");
@@ -65,7 +71,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public void editMessage(MessageDto messageDto) {
-        MessageEntity messageEntity = messageRepository.findMessageEntityById(
+        MessageEntity messageEntity = findMessageEntityById(
                 messageDto.getId());
         messageEntity.setMsg(messageDto.getMsg());
         messageRepository.save(messageEntity);
@@ -75,7 +81,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public void deleteMessage(Long id) {
-        messageRepository.delete(messageRepository.findMessageEntityById(id));
+        messageRepository.delete(findMessageEntityById(id));
         log.info("message with id {} successfully deleted", id);
     }
+
+
 }

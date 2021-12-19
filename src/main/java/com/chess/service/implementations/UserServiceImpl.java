@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         }
         log.info("Prepared user for edit : id {} username {} email {}",
                 user.getId(), user.getUsername(), user.getEmail());
-        userRepository.save(user);
+        saveUser(user);
         log.info("User with id: {} successfully updated",
                 userDto.getId());
     }
