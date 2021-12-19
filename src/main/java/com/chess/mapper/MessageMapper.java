@@ -39,6 +39,7 @@ public class MessageMapper {
             MessageEntity messageEntity) {
 
         MessageDto messageDto = new MessageDto();
+        messageDto.setId(messageEntity.getId());
         messageDto.setRecipient(messageEntity.getRecipient().getUsername());
         messageDto.setSender(messageEntity.getSender().getUsername());
         messageDto.setMsg(messageEntity.getMsg());
