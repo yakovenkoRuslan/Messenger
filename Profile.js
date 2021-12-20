@@ -21,9 +21,10 @@ export const Profile = () => {
   const [username, setUsername] = React.useState('');
   const [email, setEmail] = React.useState('');
   React.useEffect(() => {
+    console.log(global.IP),
     getUserInfo('userToken').then(token=>{
     getUserInfo('userName').then(name=>
-      axios.get("http://192.168.0.103:8080/profile?username="+name, {
+      axios.get("http://"+global.IP+":8080/profile?username="+name, {
         headers:{
           Authorization: 'Bearer_' + token
         }})).then(data=>{

@@ -145,7 +145,7 @@ export default function App({ navigation }) {
       signIn: async (dataIn) => {
         //console.log(state.userToken);
         console.log(dataIn);
-        axios.post("http://192.168.0.103:8080/login", {
+        axios.post("http://"+global.IP+":8080/login", {
           username: dataIn.username,
           password: dataIn.password
         }).then(res=>{
@@ -169,7 +169,7 @@ export default function App({ navigation }) {
       signUp: async (dataIn) => {
 
         console.log(dataIn);
-        axios.post("http://192.168.0.103:8080/registration", {
+        axios.post("http://"+global.IP+":8080/registration", {
           username: dataIn.username,
           email:dataIn.email,
           password: dataIn.password

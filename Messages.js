@@ -23,7 +23,7 @@ export function ChatScreen(){
         getUserInfo('userToken').then(token=>{
             getUserInfo('chatUsername').then(chatUserName=>{
                 getUserInfo('userName').then(name=>{
-                    axios.get("http://192.168.0.103:8080/message?firstUser="+name+"&secondUser="+chatUserName,
+                    axios.get("http://"+global.IP+":8080/message?firstUser="+name+"&secondUser="+chatUserName,
                     {
                         headers:{
                             Authorization: 'Bearer_' + token
@@ -42,7 +42,7 @@ export function ChatScreen(){
         getUserInfo('userToken').then(token=>{
             getUserInfo('chatUsername').then(chatUserName=>{
                 getUserInfo('userName').then(name=>{
-                    axios.post("http://192.168.0.103:8080/message",{
+                    axios.post("http://"+global.IP+":8080/message",{
                         sender:name,
                         recipient:chatUserName,
                         msg:message
@@ -108,25 +108,6 @@ export function ChatScreen(){
                 }}/>
             </View>
       </View>
-
-        //<View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-                            //<Button title = {item.key} style={styles.input}/>
-                        // </View>
-        /* <View style={styles.container}>
-            <View style={styles.bottom}>
-                <TextInput style={styles.input}
-                    placeholder='Your message'
-                    value={message}
-                    onChangeText={setMessage}/>
-                <Button title="Send" onPress={()=>{
-                    getUserInfo('chatUsername').then(chatUserName=>{
-                        SendMessage(chatUserName, message),
-                        setMessage('')
-                    })
-                }}/>
-            </View>
-        </View> */
-      
     )
 }
 

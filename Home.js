@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {View, Text,StyleSheet } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 
-
+global.IP = '192.168.0.103'
 
 const pages = [{page: "Home"}, 
   {page:"Profile"}, 

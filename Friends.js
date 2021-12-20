@@ -60,7 +60,7 @@ function FriendComponent(props){
         getUserInfo('userName').then(name=>{
 
         console.log(name);
-        axios.get("http://192.168.0.103:8080/friends?user="+name,{
+        axios.get("http://"+global.IP+":8080/friends?user="+name,{
           headers:{
             Authorization: 'Bearer_' + token
           }
@@ -94,7 +94,7 @@ function FriendComponent(props){
             console.log(friendToAdd);
             getUserInfo('userName').then(name=>{
               console.log(name);
-            axios.post("http://192.168.0.103:8080/friends/add-friend",{
+            axios.post("http://"+global.IP+":8080/friends/add-friend",{
               firstUsername:name,
               secondUsername:friendToAdd
             }, {
