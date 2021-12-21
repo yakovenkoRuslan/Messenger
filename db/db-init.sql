@@ -1,4 +1,3 @@
-
-    insert into STATUS values (1, 'оnline');
-insert into USER values (1, 'qwe', '$2a$10$RLtlWTIuxQyQQNipfKdtaeIIS3ZhUZ./jh2.nEh3lWLiuGiLxCIEO', 'lumiere', 1);
---     insert into friend_entity values (2, 1, 3)
+insert into status values (1, 'default');
+insert into status values (2, 'deleted');
+insert into status values (3, 'banned');

@@ -15,7 +15,8 @@ import java.util.Date;
 @Table(name = "message")
 public class MessageEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "messageGenerator")
+    @SequenceGenerator(name = "messageGenerator", initialValue = 1, allocationSize = 1)
     private Long id;
 
     @ManyToOne

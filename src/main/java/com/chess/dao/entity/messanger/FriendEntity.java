@@ -14,7 +14,8 @@ import java.io.Serializable;
 public class FriendEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "friendGenerator")
+    @SequenceGenerator(name = "friendGenerator", initialValue = 1, allocationSize = 1)
     Long id;
 
     @ManyToOne

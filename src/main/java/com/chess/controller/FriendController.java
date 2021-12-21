@@ -6,6 +6,7 @@ import com.chess.dto.FriendDto;
 import com.chess.dto.UserDto;
 import com.chess.mapper.FriendMapper;
 import com.chess.mapper.UserMapper;
+import com.chess.service.exceptions.ServiceException;
 import com.chess.service.interfaces.FriendService;
 import com.chess.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +77,7 @@ public class FriendController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<FriendDto> deleteFriend(
-            @RequestBody FriendDto friendDto) {
+            @RequestBody FriendDto friendDto) throws ServiceException {
         friendService.deleteFriend(
                 userService.findUserByUsername(friendDto.getFirstUsername()),
                 userService.findUserByUsername(friendDto.getSecondUsername()));

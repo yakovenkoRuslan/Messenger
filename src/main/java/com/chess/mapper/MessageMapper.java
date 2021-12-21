@@ -43,6 +43,7 @@ public class MessageMapper {
         messageDto.setRecipient(messageEntity.getRecipient().getUsername());
         messageDto.setSender(messageEntity.getSender().getUsername());
         messageDto.setMsg(messageEntity.getMsg());
+        messageDto.setDate(messageEntity.getDate());
         return messageDto;
     }
 }

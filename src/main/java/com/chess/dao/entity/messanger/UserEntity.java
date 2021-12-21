@@ -15,7 +15,8 @@ import java.io.Serializable;
 public class UserEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userGenerator")
+    @SequenceGenerator(name = "userGenerator", initialValue = 1, allocationSize = 1)
     private Long id;
 
     @Column(unique = true, name = "username")

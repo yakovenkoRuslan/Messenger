@@ -14,7 +14,8 @@ import java.io.Serializable;
 @Table(name = "status")
 public class StatusEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "statusGenerator")
+    @SequenceGenerator(name = "statusGenerator", initialValue = 1, allocationSize = 1)
     Long id;
 
     String name;
