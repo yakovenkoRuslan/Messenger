@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throws UsernameNotFoundException {
         UserEntity user = userService.findUserByUsername(login);
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        if (user == null) {
+        if (user == null || user.getStatus().getName().equals("deleted")) {
             throw new UsernameNotFoundException(
                     String.format("User with %s not found", login));
         }

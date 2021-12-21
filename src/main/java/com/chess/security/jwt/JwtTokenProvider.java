@@ -8,15 +8,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+import static java.lang.String.format;
 import static java.util.List.of;
 import static java.util.Optional.ofNullable;
-
-import static java.lang.String.format;
 
 @Slf4j
 @Component
@@ -75,10 +75,15 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(
-                getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "",
-                ofNullable(userDetails).map(UserDetails::getAuthorities).orElse(of()));
+        try {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(
+                    getUsername(token));
+            return new UsernamePasswordAuthenticationToken(userDetails, "",
+                    ofNullable(userDetails).map(UserDetails::getAuthorities)
+                            .orElse(of()));
+        } catch (UsernameNotFoundException e) {
+            return null;
+        }
     }
 
     public boolean isValidToken(String token) {

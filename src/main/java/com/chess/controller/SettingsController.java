@@ -3,6 +3,7 @@ package com.chess.controller;
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dto.UserDto;
 import com.chess.mapper.UserMapper;
+import com.chess.service.exceptions.ServiceException;
 import com.chess.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,13 +37,12 @@ public class SettingsController {
 
     @PutMapping
     public ResponseEntity<UserDto> edit(@RequestBody UserDto userDto) {
-        UserEntity user;
         try {
             userService.editUser(userDto);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ServiceException e) {
+            return ResponseEntity.badRequest().build();
         }
-        return null;
+        return ResponseEntity.ok(userDto);
     }
 
     // Нужно допилить  удаление  (redirect:/logout)

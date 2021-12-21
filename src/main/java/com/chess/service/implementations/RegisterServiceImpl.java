@@ -1,16 +1,15 @@
 package com.chess.service.implementations;
 
-import com.chess.dao.entity.messanger.StatusEntity;
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dto.UserDto;
 import com.chess.mapper.UserMapper;
 import com.chess.service.exceptions.ServiceException;
 import com.chess.service.exceptions.ValidationException;
 import com.chess.service.interfaces.RegisterService;
+import com.chess.service.interfaces.StatusService;
 import com.chess.service.interfaces.UserService;
 import com.chess.service.validator.UserDtoValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +27,16 @@ public class RegisterServiceImpl implements RegisterService {
 
     final UserMapper userMapper;
 
+    final StatusService statusService;
+
     public RegisterServiceImpl(UserService userService,
             PasswordEncoder passwordEncoder, UserDtoValidator userDtoValidator,
-            UserMapper userMapper) {
+            UserMapper userMapper, StatusService statusService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.userDtoValidator = userDtoValidator;
         this.userMapper = userMapper;
+        this.statusService = statusService;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class RegisterServiceImpl implements RegisterService {
             userEntity = userMapper.convertUserDtoToUserEntity(userDto);
             userDtoValidator.isValidFields(userDto);
             userDto.setPassword(null);
+            userEntity.setStatus(statusService.findStatusById(1L));
             userService.saveUser(userEntity);
         } catch (ValidationException e) {
             throw new ServiceException("Error when validate fields. " + e);

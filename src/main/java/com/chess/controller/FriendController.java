@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -52,6 +53,9 @@ public class FriendController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return ResponseEntity.ok(friends.stream()
+                    .filter(friendEntity -> !Objects.equals(
+                            friendEntity.getSecondUser().getStatus().getName(),
+                            "deleted"))
                     .map(friendMapper::convertFriendEntityToUserDto)
                     .collect(Collectors.toCollection(ArrayList::new)));
         } catch (Exception ex) {

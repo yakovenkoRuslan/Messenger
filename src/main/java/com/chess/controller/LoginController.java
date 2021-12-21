@@ -56,6 +56,8 @@ public class LoginController {
 
             responseUser.setAuthenticationToken(token);
             responseUser.setOnline(true);
+            user.setOnline(true);
+            userService.saveUser(user);
 
             return ResponseEntity.ok(responseUser);
         } catch (AuthenticationException e) {

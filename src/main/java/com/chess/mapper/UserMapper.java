@@ -1,6 +1,5 @@
 package com.chess.mapper;
 
-import com.chess.dao.entity.messanger.StatusEntity;
 import com.chess.dao.entity.messanger.UserEntity;
 import com.chess.dto.UserDto;
 import com.chess.service.interfaces.StatusService;
@@ -25,10 +24,6 @@ public class UserMapper {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        //must be changed in future
-        StatusEntity status = new StatusEntity(1L, "online");
-        user.setStatus(status);
         return user;
     }
 
@@ -37,7 +32,8 @@ public class UserMapper {
         userDto.setId(userEntity.getId());
         userDto.setUsername(userEntity.getUsername());
         userDto.setEmail(userEntity.getEmail());
-        userDto.setPassword(userEntity.getPassword());
+        userDto.setPassword(null);
+        userDto.setOnline(userEntity.isOnline());
         return userDto;
     }
 }

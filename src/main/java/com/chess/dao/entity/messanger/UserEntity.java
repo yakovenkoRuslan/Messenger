@@ -31,4 +31,7 @@ public class UserEntity implements Serializable {
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
     private StatusEntity status;
+
+    @Column(name = "online")
+    boolean isOnline;
 }
