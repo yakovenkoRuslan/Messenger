@@ -79,12 +79,12 @@ export function ChatScreen(){
           data={messagesList}
           renderItem={({item}) => (
                 username == item.sender? 
-                (<View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-                    <Text style={styles.input}> {item.msg}</Text>
+                (<View style={[styles.messageBox,{flexDirection: 'row', justifyContent: 'flex-start'}]}>
+                    <Text style={[styles.input,styles.message]}> {item.msg}</Text>
                 </View>)
                 :
-                (<View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                    <Text style={styles.input}> {item.msg}</Text>
+                (<View style={[styles.messageBox,{flexDirection: 'row', justifyContent: 'flex-end'}]}>
+                    <Text style={[styles.input,styles.message]}> {item.msg}</Text>
                 </View>)
   
        )}
@@ -121,7 +121,18 @@ const styles = StyleSheet.create({
         marginTop: 40
       
     },
-
+    message:{
+        
+        justifyContent:'center',
+        fontWeight: "bold",
+        color:"purple",
+        height: 50,
+    }, 
+    messageBox:{
+        
+        color: 'blue',
+        borderWidth:0.3
+    },  
     input: {
         
         // flex: 5,
