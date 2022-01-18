@@ -1,21 +1,44 @@
+code for https://dbdiagram.io/d
+
 table user as u {
   id int [pk]
   username varchar
   password varchar
   email varchar
-  friend int
-  games int
   raiting int
+  status int
+}
+
+table status {
+  id int [pk]
+  name varchar
 }
 
 table game {
-  game_id int [pk]
-  first_player varchar
-  second_player varchar
-  win_color varchar
+  id int [pk]
+  first_player int
+  second_player int
+  first_player_color varchar
+  second_player_color varchar
   winner int
   type_of_game int
-  moves varchar
+  received_rating int
+  datetime date
+}
+
+table friend {
+  first_user int [pk]
+  second_user int [pk]
+}
+
+table move {
+  id int [pk]
+  game_id int
+  color varchar
+  figure varchar
+  new_x_value int
+  new_y_value int
+
 }
 
 table typeOfGame {
@@ -23,8 +46,20 @@ table typeOfGame {
   name varchar
 }
 
-Ref : u.games > game.game_id
-Ref: u.friend > u.id
+table message {
+  id int [pk]
+  sender int
+  recipient int
+  text varchar
+  datetime date
+}
+
+Ref: user.status > status.id
+Ref: message.sender > user.id
+Ref: message.recipient > user.id
+Ref: move.game_id > game.id
+Ref: friend.second_user > u.id
+Ref: friend.first_user > u.id
 Ref: game.type_of_game > typeOfGame.id
-Ref: game.first_player - user.username
-Ref: game.second_player - user.username
+Ref: game.first_player > user.id
+Ref: game.second_player > user.id
