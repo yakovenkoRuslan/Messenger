@@ -1,13 +1,18 @@
 
 import * as React from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Alert, Button, Text, TextInput, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {HomeScreen} from "./Home"
 import { SettingsScreen} from './Setting';
 import { FriendsScreen } from './Friends';
 import { Profile } from './Profile';
-const AuthContext = React.createContext();
+import { ChatScreen } from './Messages';
+
+import { saveUserInfo, getUserInfo } from './UserStore';
+import axios from 'axios';
+
+export const AuthContext = React.createContext();
 
 function SplashScreen() {
   return (
@@ -17,18 +22,7 @@ function SplashScreen() {
   );
 }
 
-// function HomeScreen() {
-//   const { signOut } = React.useContext(AuthContext);
-
-//   return (
-//     <View>
-//       <Text>Signed in!</Text>
-//       <Button title="Sign out" onPress={signOut} />
-//     </View>
-//   );
-// }
-
-function SignInScreen() {
+function SignInScreen({navigation}) {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -47,10 +41,48 @@ function SignInScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign in" onPress={() => signIn({ username, password })} />
+      <Button title="Sign in" onPress={() => signIn({ username: username, password: password })} />
+      <Button title="Sign up screen" onPress={() => navigation.navigate("SignUp")} style={{
+          flex:1,
+          flexDirection:'row',
+          alignItems:'center',
+          justifyContent:'center'
+      }}
+      />
     </View>
   );
 }
+
+function SignUpScreen({navigation}) {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const { signUp } = React.useContext(AuthContext);
+
+  return (
+    <View>
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        placeholder="email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button title="Sign up" onPress={() => signUp({ username: username, email: email, password: password,
+      nav: navigation })} />
+    </View>
+  );
+}
+
 
 const Stack = createStackNavigator();
 
@@ -92,7 +124,8 @@ export default function App({ navigation }) {
 
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
-        // userToken = await SecureStore.getItemAsync('userToken');
+         userToken = await getUserInfo("userToken");
+         //console.log(userToken);
       } catch (e) {
         // Restoring token failed
       }
@@ -109,22 +142,52 @@ export default function App({ navigation }) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data) => {
+      signIn: async (dataIn) => {
+        //console.log(state.userToken);
+        console.log(dataIn);
+        axios.post("http://"+global.IP+":8080/login", {
+          username: dataIn.username,
+          password: dataIn.password
+        }).then(res=>{
+          //console.log(res),  
+          saveUserInfo('userToken', res.data.authenticationToken),
+          saveUserInfo('userName', res.data.username),
+          dispatch({ type: 'SIGN_IN', token: res.data.authenticationToken})
+        }).catch(error => console.log(error));
+        
+        // } //finally {
+        //   setLoading(false);
+        // }
         // In a production app, we need to send some data (usually username, password) to server and get a token
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+       
       },
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
-      signUp: async (data) => {
+      signUp: async (dataIn) => {
+
+        console.log(dataIn);
+        axios.post("http://"+global.IP+":8080/registration", {
+          username: dataIn.username,
+          email:dataIn.email,
+          password: dataIn.password
+        }).then(data=>{
+          console.log(data),
+          dataIn.nav.navigate("SignIn")
+          //save('userToken', data.data.autenticationToken),
+           //dispatch({ type: 'SIGN_IN', token: data.data.authenticationToken})
+        }).catch(error => {console.log(error),
+          Alert.alert('Sign up', 'Invalid sing up data')});
+
+        
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
         // In the example, we'll use a dummy token
 
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        
       },
     }),
     []
@@ -138,7 +201,7 @@ export default function App({ navigation }) {
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
           ) : state.userToken == null ? (
-            // No token found, user isn't signed in
+            <>
             <Stack.Screen
               name="SignIn"
               component={SignInScreen}
@@ -148,12 +211,16 @@ export default function App({ navigation }) {
                 animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
+
+            <Stack.Screen name="SignUp" component={SignUpScreen}/>
+            </>
           ) : (
            <>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="Friends"  component = {FriendsScreen}/>
-            <Stack.Screen name="Settings" component = {SettingsScreen} /> 
+            <Stack.Screen name="Settings" children={() => <SettingsScreen auth={AuthContext} />}/>
+            <Stack.Screen name="Messages"  component = {ChatScreen}/>
             </>
           )}
         </Stack.Navigator>

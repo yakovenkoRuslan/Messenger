@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {View, Text,StyleSheet } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 
-
+global.IP = '192.168.0.103'
 
 const pages = [{page: "Home"}, 
   {page:"Profile"}, 
@@ -36,11 +36,11 @@ export function HomeScreen({ navigation }) {
         onChange={item => {
           //setDropdown(item.value);
           //setDropdown("Fuckyou"),
-          console.log('selected', item);
+         // console.log('selected', item);
           navigation.navigate(item.page)
         }}
          renderLeftIcon={() => (
-             <Text>Fuck: </Text> 
+             <Text>Menu</Text> 
          )}
         renderItem={item => _renderItem(item)}
     ></Dropdown>

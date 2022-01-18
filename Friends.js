@@ -1,9 +1,12 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {Modal,TextInput, FlatList, Button, View, Text,StyleSheet } from 'react-native';
+import {Alert, Modal,TextInput, FlatList, Button, View, Text,StyleSheet } from 'react-native';
+import { getUserInfo, saveUserInfo } from './UserStore';
+import axios from 'axios';
 
 function FriendComponent(props){
   const [modalVisible, setModalVisible] = useState(false);
+    
     return (
       <View>
         <Modal onDismiss={()=>setModalVisible(false)}
@@ -16,12 +19,18 @@ function FriendComponent(props){
         >
           <View >
             <View style={modal_styles.modalView}>
+            <Text style={modal_styles.modalText}>Email: {props.email}</Text>
+            <Text style={modal_styles.modalText}>Net status: {props.online ? "Online" : "Not online"}</Text>
               <Text style={modal_styles.modalText}>Send message to {props.name}</Text>
-              <TextInput style={{borderWidth:0.3}}/>
-              <Button title="Dismiss"
+              <Button title="Messages"
                 style={[modal_styles.button, modal_styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}/>
-              <Button title="Send"
+                onPress={() => {
+                    saveUserInfo('chatUsername', props.name).then(
+                      props.nav.navigate("Messages"),
+                      setModalVisible(!modalVisible)
+                    )
+                  }}/>
+              <Button title="Close"
               style={[modal_styles.button, modal_styles.buttonClose]}
               onPress={() => (
                 //Send
@@ -31,37 +40,100 @@ function FriendComponent(props){
         </Modal>
         <Button title={props.name}
           style={[modal_styles.button, modal_styles.buttonOpen]}
-          onPress={() => setModalVisible(true)}/>
+          onPress={() => {
+              //request for the profile settings
+              setModalVisible(true)
+            }}/>
       </View>
     );
   }
   
+  const FriendsContext = React.createContext();
+
   export const FriendsScreen = ({navigation})=> {
+    const [friendsList, setFriendsList] = useState([]);
+    const [friendToAdd, setFriendToAdd] = useState('');
+
+    const UpdateFriendsList = ()=>{
+      getUserInfo('userToken').then(token=>{
+        console.log("token : ")
+        console.log(token);
+
+        getUserInfo('userName').then(name=>{
+
+        console.log(name);
+        axios.get("http://"+global.IP+":8080/friends?user="+name,{
+          headers:{
+            Authorization: 'Bearer_' + token
+          }
+        }).then(data=>{
+          console.log("data:"); 
+          console.log(data.data);
+          setFriendsList(data.data);
+        }).catch(error=>console.log(error));
+        })
+      });
+
+    }
+
+     React.useEffect(() => {
+
+      UpdateFriendsList();
+      
+      }, []);
     return (
-      <View>
-        <FlatList
-          data={[
-            {key: 'Devin'},
-            {key: 'Dan'},
-            {key: 'Dominic'},
-            {key: 'Jackson'},
-            {key: 'James'},
-            {key: 'Joel'},
-            {key: 'John'},
-            {key: 'Jillian'},
-            {key: 'Jimmy'},
-            {key: 'Julie'},
-          ]}
-          renderItem={({item}) => (
-            <FriendComponent name={item.key}/>
-          )}
-        />
-      </View>
+      <FriendsContext.Provider value={FriendsContext}>
+        <View>
+          <FlatList
+            data = {friendsList}
+            renderItem={({item}) => (
+              <FriendComponent online = {item.online} email={item.email} name={item.username} nav = {navigation}/>
+            )}
+          />
+          <Button title="Add friend" onPress={()=>{
+            
+            getUserInfo('userToken').then(token=>{
+            console.log(friendToAdd);
+            getUserInfo('userName').then(name=>{
+              console.log(name);
+            axios.post("http://"+global.IP+":8080/friends/add-friend",{
+              firstUsername:name,
+              secondUsername:friendToAdd
+            }, {
+              headers:{
+                Authorization: 'Bearer_' + token
+              }
+            }
+            ).catch(error=>{
+              console.log(error)
+            })
+            UpdateFriendsList();
+           } )
+
+          });
+
+          }
+          } color="purple"/>
+         
+           <TextInput 
+           placeholder='Friend to add username'
+           value={friendToAdd} style={modal_styles.input} onChangeText={setFriendToAdd}/> 
+        </View>
+      </FriendsContext.Provider>
     );
   }
 
-  
+
 const modal_styles = StyleSheet.create({
+  input: {
+    borderWidth:4,
+    height: 70,
+    backgroundColor: '#ffffff',
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  
+
   centeredView: {
     flex: 1,
     justifyContent: "center",
